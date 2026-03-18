@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&family=Dancing+Script&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+height:100vh;
+background:radial-gradient(circle,#0f172a,#020617);
+color:white;
+font-family:'Poppins',sans-serif;
+overflow:hidden;
+}
+
+.container{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+width:90%;
+max-width:420px;
+}
+
+/* FOTO */
+.slider{
+width:260px;
+height:260px;
+margin:auto;
+border-radius:20px;
+overflow:hidden;
+background:#000;
+display:flex;
+align-items:center;
+justify-content:center;
+position:relative;
+}
+
+.slider img{
+width:100%;
+height:100%;
+object-fit:contain;
+position:absolute;
+opacity:0;
+transition:1s;
+}
+.slider img.active{opacity:1}
+
+button{
+margin-top:20px;
+padding:12px 25px;
+border:none;
+border-radius:30px;
+background:#facc15;
+cursor:pointer;
+}
+
+/* LETTER */
+.letter{
+position:fixed;
+inset:0;
+display:none;
+justify-content:center;
+align-items:center;
+background:rgba(0,0,0,0.7);
+backdrop-filter:blur(8px);
+}
+
+.letter-box{
+background:#0f172a;
+padding:25px;
+border-radius:20px;
+max-width:90%;
+max-height:80vh;
+overflow:auto;
+}
+
+.letter-text{
+font-family:'Dancing Script',cursive;
+font-size:20px;
+line-height:1.8;
+white-space:pre-line;
+}
+
+.choice button{
+display:block;
+width:100%;
+margin:10px 0;
+background:rgba(255,255,255,0.1);
+color:white;
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+<audio id="bgm" src="ramadan.mp3" loop></audio>
+<audio id="letterMusic" src="surat.mp3" loop></audio>
+
+<div class="container" id="scene"></div>
+
+<div class="letter" id="letter">
+<div class="letter-box">
+<h3 id="judul"></h3>
+<p id="isi" class="letter-text"></p>
+<button onclick="closeLetter()">Tutup</button>
+</div>
+</div>
+
+<script>
+
+let fotos=["foto1.jpg","foto2.jpg","foto3.jpg","foto4.jpg"]
+
+let j1="", j2="", j3=""
+
+let bgm=document.getElementById("bgm")
+let letterMusic=document.getElementById("letterMusic")
+
+/* SLIDER */
+function runSlider(){
+let slider=document.getElementById("slider")
+slider.innerHTML=fotos.map((f,i)=>`<img src="${f}" class="${i==0?'active':''}">`).join("")
+let i=0
+setInterval(()=>{
+let imgs=slider.querySelectorAll("img")
+imgs[i].classList.remove("active")
+i=(i+1)%imgs.length
+imgs[i].classList.add("active")
+},2500)
+}
+
+/* TYPE */
+function typeText(el,text,cb){
+let i=0
+el.innerHTML=""
+let inter=setInterval(()=>{
+el.innerHTML+=text.charAt(i)
+i++
+if(i>=text.length){clearInterval(inter);if(cb)cb()}
+},25)
+}
+
+let scene=document.getElementById("scene")
+
+/* START */
+scene.innerHTML=`
+<div class="slider" id="slider"></div>
+<h2>Kamu 🤍</h2>
+<button onclick="start()">Mulai</button>
+`
+runSlider()
+
+function start(){
+bgm.play()
+scene.innerHTML=`<p id="t"></p>`
+typeText(t,"Aku mau nanya beberapa hal ya cayaaangg...",()=>setTimeout(q1,1000))
+}
+
+/* Q1 */
+function q1(){
+scene.innerHTML=`
+<p>Ngabuburit kamu biasanya?</p>
+<div class="choice">
+<button onclick="a1('takjil')">Cari takjil 😆</button>
+<button onclick="a1('boboo')">boboo 😴</button>
+<button onclick="a1('hp')">Scroll HP 😅</button>
+</div>`
+}
+
+function a1(p){
+j1=p
+
+let teks=""
+if(p=="takjil") teks="Kamu tipe yang langsung cari makanan yahh 😆 lucu banget ciih lebihh yucu agi kalo cama acuu 😅"
+if(p=="boboo") teks="emmmmhhh palaahh bobo cendiyii acuu nda di  ajak"
+if(p=="hp") teks="Scroll terus ya 😅 tapi jangan lupainn acuu yahh jangan yupa istirahat juga"
+
+scene.innerHTML=`<p id="t"></p>`
+typeText(t,teks,()=>setTimeout(q2,1200))
+}
+
+/* Q2 */
+function q2(){
+scene.innerHTML=`
+<p>Yang kamu tunggu di Ramadan?</p>
+<div class="choice">
+<button onclick="a2('buka')">Buka 🍽</button>
+<button onclick="a2('tarawih')">Tarawih 🕌</button>
+<button onclick="a2('kamu')">Kamu 😳</button>
+</div>`
+}
+
+function a2(p){
+j2=p
+
+let teks=""
+if(p=="buka") teks="Ihhh pasti langsung mikirin makanan ndaa mikilinn acuu, ndapapa sih"
+if(p=="tarawih") teks="MasyaAllah… sholehah cekalii canntiknya acuu 🤍"
+if(p=="kamu") teks="ihh 😳 celiusan? acuu juga celaluu nunggu kamu"
+
+scene.innerHTML=`<p id="t"></p>`
+typeText(t,teks,()=>setTimeout(q3,1200))
+}
+
+/* Q3 */
+function q3(){
+scene.innerHTML=`
+<p>Kalau sama acuu?</p>
+<div class="choice">
+<button onclick="a3('jalan')">Jalan 🚶</button>
+<button onclick="a3('boboo ajahh')">Boboo 🤍</button>
+</div>`
+}
+
+function a3(p){
+j3=p
+
+let teks=""
+if(p=="jalan") teks="Ayook Acu pengen banget jalan bareng cayangg cetiap halii suatu halii nanti 😭"
+if(p=="boboo ajahh") teks="Boboo bareng kamu aja udah cukup cekalii buat acuu"
+
+scene.innerHTML=`<p id="t"></p>`
+typeText(t,teks,()=>setTimeout(last,1200))
+}
+
+/* TRANSISI */
+function last(){
+scene.innerHTML=`<button onclick="openLetter()">Aku ada sesuatu 🤍</button>`
+}
+
+/* SURAT */
+function openLetter(){
+document.getElementById("letter").style.display="flex"
+
+bgm.pause()
+letterMusic.play()
+
+let extra=""
+
+if(j1=="takjil") extra+="Acuu kebayang kita jalan sore cari takjil bareng 😭\n\n"
+if(j1=="tidur") extra+="iiihh palahh acu ndaa di ajakk 😌\n\n"
+if(j1=="hp") extra+="Walau kamu sibuk sendiri, acu tetep mikirin kamu 😅\n\n"
+
+if(j2=="kamu") extra+="Dan ternyata… kamu juga nunggu aku 🤍\n\n"
+
+if(j3=="jalan") extra+="Ayook Acu pengen banget jalan bareng cayangg cetiap halii suatu halii nanti.\n\n"
+if(j3=="boboo ajahh") extra+="Boboo bareng kamu aja udah cukup buat acuu.\n\n"
+
+typeText(judul,"Untuk kamu yang selalu ada,",()=>{
+typeText(isi,
+"for the most special person in my life,\n\n"+
+"Aku nggak tahu sejak kapan semuanya mulai terasa berbeda,\n"+
+"tapi kehadiran kamu pelan-pelan jadi hall palingg penting buat aku.\n\n"+
+"Bukan karena kamu sempurna,\n"+
+"tapi karena kamu tetap jadi diri kamu sendiri,\n"+
+"dan itu cukup buat bikin aku nyaman.\n\n"+
+"Aku lihat kamu kuat,\n"+
+"meski kadang kamu lagi capek.\n"+
+"Dan jujur, aku kagum cekalii cama kamuu.\n\n"+
+extra+
+"Di Ramadan ini,\n"+
+"aku cuma berdoa semoga kamu selalu dijaga.\n\n"+
+"Kalau kamu capek,\n"+
+"ingat ya… kamu nggak sendiri.\n\n"+
+"Aku mungkin nggak selalu ada di samping kamu,\n"+
+"tapi aku selalu ada buat kamu.\n\n"+
+"Aku pengen kita tetap ada,\n"+
+"di hari-hari berikutnya.\n\n"+
+"Pelan-pelan aja,\n"+
+"yang penting bareng.\n\n"+
+"...aku sayang kamu 🤍",
+null)
+})
+}
+
+function closeLetter(){
+document.getElementById("letter").style.display="none"
+letterMusic.pause()
+bgm.play()
+}
+
+</script>
+
+</body>
+</html>
